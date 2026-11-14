@@ -10,9 +10,10 @@
     <version>3.0.0</version>
     <packageSourceUrl>https://github.com/haliskilic/ser2netweb/tree/main/packaging/chocolatey</packageSourceUrl>
     <owners>haliskilic</owners>
-    <title>ser2netweb</title>
+    <title>ser2netweb (serial-to-network bridge)</title>
     <authors>Halis KILIÇ</authors>
     <projectUrl>https://github.com/haliskilic/ser2netweb</projectUrl>
+    <iconUrl>https://cdn.jsdelivr.net/gh/haliskilic/ser2netweb@main/packaging/ser2netweb.png</iconUrl>
     <copyright>Copyright (C) 2026 Halis KILIÇ</copyright>
     <licenseUrl>https://github.com/haliskilic/ser2netweb/blob/main/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

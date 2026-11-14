@@ -226,6 +226,8 @@ def test_chocolatey_package():
         assert field[key] == url, (key, field[key])
     assert wc.DISAMBIGUATION in field["description"]
     assert field["summary"] == wc.SUMMARY
+    assert field["title"] != field["id"] and field["title"].startswith("ser2netweb ")
+    assert field["iconUrl"] == f"https://cdn.jsdelivr.net/gh/{wc.REPO}@main/packaging/ser2netweb.png"
     tags = field["tags"].split()
     assert "ser2netweb" in tags and "chocolatey" not in tags and len(set(tags)) == len(tags)
     assert "--" not in re.sub(r"(?s)<!\[CDATA\[.*?\]\]>", "", nuspec_text).split("<package", 1)[0] \
@@ -280,6 +282,35 @@ def test_chocolatey_package():
 
 def _on(workflow: str) -> str:
     return workflow.split("\npermissions:", 1)[0]
+
+
+def test_chocolatey_icon():
+    """packaging/ser2netweb.png, the package's iconUrl, is tools/make_icon.py's mark: the same
+    pixels (the compressed bytes may differ between zlib builds), 256 x 256 RGBA."""
+    import struct
+    import zlib
+
+    import make_icon
+
+    def pixels(data: bytes) -> tuple[bytes, bytes]:
+        assert data[:8] == b"\x89PNG\r\n\x1a\n"
+        pos, ihdr, idat = 8, b"", b""
+        while pos < len(data):
+            (length,) = struct.unpack(">I", data[pos:pos + 4])
+            kind, body = data[pos + 4:pos + 8], data[pos + 8:pos + 8 + length]
+            (crc,) = struct.unpack(">I", data[pos + 8 + length:pos + 12 + length])
+            assert crc == zlib.crc32(kind + body) & 0xFFFFFFFF, kind
+            ihdr = body if kind == b"IHDR" else ihdr
+            idat += body if kind == b"IDAT" else b""
+            pos += 12 + length
+        return ihdr, zlib.decompress(idat)
+
+    with open(os.path.join(ROOT, "packaging", "ser2netweb.png"), "rb") as fh:
+        committed = pixels(fh.read())
+    assert committed[0][:8] == struct.pack(">II", 256, 256) and committed[0][8:10] == b"\x08\x06"
+    assert committed == pixels(make_icon.png_bytes(256)), \
+        "regenerate it: python3 tools/make_icon.py --png"
+    print("Chocolatey icon: packaging/ser2netweb.png is make_icon.py's 256 px mark  OK")
 
 
 def test_workflows():
@@ -382,6 +413,7 @@ if __name__ == "__main__":
     test_yaml_scalars()
     test_scoop_manifest()
     test_chocolatey_package()
+    test_chocolatey_icon()
     test_workflows()
     test_schemas()
     print("\nPASS: Windows package managers")

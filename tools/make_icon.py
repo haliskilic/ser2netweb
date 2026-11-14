@@ -1,4 +1,5 @@
-"""Generate tools/ser2netweb.ico, the Windows executable icon (ser2netweb.spec).
+"""Generate tools/ser2netweb.ico, the Windows executable icon (ser2netweb.spec), and
+packaging/ser2netweb.png, the same mark as a 256 px PNG (the Chocolatey package's iconUrl).
 
 Pure standard library, no image libraries, so the icon is reproducible from source. It
 writes a classic BMP-format .ico (32-bit BGRA + 1-bpp AND mask) with the sizes Windows
@@ -6,12 +7,14 @@ asks for; PyInstaller embeds it into ser2netweb.exe. The mark is a rounded tile 
 accent blue with two rounded "data line" bars — a serial-to-network bridge.
 
     python3 tools/make_icon.py [tools/ser2netweb.ico]
+    python3 tools/make_icon.py --png [packaging/ser2netweb.png]
 """
 from __future__ import annotations
 
 import os
 import struct
 import sys
+import zlib
 
 SIZES = (16, 24, 32, 48, 64, 128, 256)
 # the admin UI's accent blue and panel/background (ser2netweb/web/static/app.css)
@@ -104,7 +107,35 @@ def build(path):
     print(f"wrote {path}: {len(images)} images, {len(out)} bytes")
 
 
+def png_bytes(size=256):
+    """The mark as an 8-bit RGBA PNG (no filter, fixed zlib level: the same bytes every run)."""
+    raw = bytearray()
+    for row in _image(size):
+        raw += b"\x00"  # filter type: none
+        for i in range(0, len(row), 4):
+            b, g, r, a = row[i:i + 4]
+            raw += bytes((r, g, b, a))
+
+    def chunk(kind, data):
+        return (struct.pack(">I", len(data)) + kind + data
+                + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF))
+
+    ihdr = struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0)  # 8-bit, RGBA
+    return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr)
+            + chunk(b"IDAT", zlib.compress(bytes(raw), 9)) + chunk(b"IEND", b""))
+
+
+def build_png(path, size=256):
+    data = png_bytes(size)
+    with open(path, "wb") as fh:
+        fh.write(data)
+    print(f"wrote {path}: {size}x{size} PNG, {len(data)} bytes")
+
+
 if __name__ == "__main__":
-    dest = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(__file__),
-                                                              "ser2netweb.ico")
-    build(dest)
+    here = os.path.dirname(os.path.abspath(__file__))
+    if sys.argv[1:2] == ["--png"]:
+        build_png(sys.argv[2] if len(sys.argv) > 2
+                  else os.path.join(here, os.pardir, "packaging", "ser2netweb.png"))
+    else:
+        build(sys.argv[1] if len(sys.argv) > 1 else os.path.join(here, "ser2netweb.ico"))

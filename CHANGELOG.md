@@ -6,6 +6,10 @@ versions follow [Semantic Versioning](https://semver.org/). Detailed notes for e
 
 ## [Unreleased]
 
+## [3.1.1] — 2026-11-14
+A fix for the fleet view's mapping editor, a fully type-checked web layer, and a Chocolatey
+package with a descriptive title and an icon. **Upgrading from 3.1.0:** nothing has to change.
+
 ### Fixed
 - Opening or saving a peer's mapping in the fleet view no longer fails with HTTP 500 when the
   peer's answer holds the mapping, or one of its sections, as something other than a JSON
@@ -14,7 +18,10 @@ versions follow [Semantic Versioning](https://semver.org/). Detailed notes for e
 
 ### Changed
 - The web layer (`ser2netweb.web`) is fully type-annotated, and CI's mypy checks it with
-  `disallow_untyped_defs` on Linux and Windows (#121).
+  `disallow_untyped_defs` for Linux and for Windows (#121).
+- The Chocolatey package is titled *ser2netweb (serial-to-network bridge)* and shows the
+  application's icon (`packaging/ser2netweb.png`, drawn by `tools/make_icon.py --png` like the
+  Windows executable's icon) (#109).
 
 ## [3.1.0] — 2026-11-14
 Device-server features from classic ser2net (packing, one writer, opening the port only while
@@ -1190,7 +1197,8 @@ Hardening and operations.
 ## [1.0] — 2026-06-06
 First release: serial↔TCP (raw, telnet, RFC 2217), web UI, access control, logs.
 
-[Unreleased]: https://github.com/haliskilic/ser2netweb/compare/v3.1.0...HEAD
+[Unreleased]: https://github.com/haliskilic/ser2netweb/compare/v3.1.1...HEAD
+[3.1.1]: https://github.com/haliskilic/ser2netweb/releases/tag/v3.1.1
 [3.1.0]: https://github.com/haliskilic/ser2netweb/releases/tag/v3.1.0
 [3.0.1]: https://github.com/haliskilic/ser2netweb/releases/tag/v3.0.1
 [3.0.0]: https://github.com/haliskilic/ser2netweb/releases/tag/v3.0.0
