@@ -282,11 +282,18 @@ async def pulse_safe_checks(broker):
     async with Slave() as slave, gateway(broker, slave, logs=logs, points=points) as r:
         assert await until(lambda: "plant/a/pump/set" in broker.subscriptions
                            and r.status.safe.get("state") == "ok"), (r.status.safe, logs)
+        before = len(broker.payloads("plant/a/pump"))
         broker.publish("plant/a/pump/set", b"1")
         assert await until(lambda: slave.coils[0] is True), logs
         assert await until(lambda: slave.coils[0] is False and not r._pulses, 3.0), logs
-        assert await until(lambda: broker.payloads("plant/a/pump")[-2:] == [b"1", b"0"]), \
-            broker.payloads("plant/a/pump")
+
+        def one_then_zero() -> bool:
+            # every poll publishes the coil again, so look for a 1 and a later 0 among what
+            # came after the /set, not at the last two (a slow runner polls once more first)
+            seq = broker.payloads("plant/a/pump")[before:]
+            return b"1" in seq and b"0" in seq[seq.index(b"1"):]
+
+        assert await until(one_then_zero), broker.payloads("plant/a/pump")[before:]
         print("pulse: a /set of 1 through the broker, false after the pulse, 1 then 0 "
               "published  OK")
 
