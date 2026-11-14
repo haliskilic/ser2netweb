@@ -298,6 +298,8 @@ def test_chocolatey_icon():
         while pos < len(data):
             (length,) = struct.unpack(">I", data[pos:pos + 4])
             kind, body = data[pos + 4:pos + 8], data[pos + 8:pos + 8 + length]
+            (crc,) = struct.unpack(">I", data[pos + 8 + length:pos + 12 + length])
+            assert crc == zlib.crc32(kind + body) & 0xFFFFFFFF, kind
             ihdr = body if kind == b"IHDR" else ihdr
             idat += body if kind == b"IDAT" else b""
             pos += 12 + length

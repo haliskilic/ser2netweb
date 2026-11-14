@@ -18,7 +18,7 @@ package with a descriptive title and an icon. **Upgrading from 3.1.0:** nothing 
 
 ### Changed
 - The web layer (`ser2netweb.web`) is fully type-annotated, and CI's mypy checks it with
-  `disallow_untyped_defs` on Linux and Windows (#121).
+  `disallow_untyped_defs` for Linux and for Windows (#121).
 - The Chocolatey package is titled *ser2netweb (serial-to-network bridge)* and shows the
   application's icon (`packaging/ser2netweb.png`, drawn by `tools/make_icon.py --png` like the
   Windows executable's icon) (#109).

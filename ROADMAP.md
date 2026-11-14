@@ -247,7 +247,7 @@
 - **Packaging (#117, PR [#131](https://github.com/haliskilic/ser2netweb/pull/131)):** signed RPMs, a distribution-package install kind,
   EPEL 10, a conda-forge recipe, nginx reverse-proxy CI.
 
-### v3.1.1 — fleet-view fix, typed web layer (issues [#121](https://github.com/haliskilic/ser2netweb/issues/121), [#109](https://github.com/haliskilic/ser2netweb/issues/109), PR [#133](https://github.com/haliskilic/ser2netweb/pull/133))
+### v3.1.1 — fleet-view fix, typed web layer (issues [#121](https://github.com/haliskilic/ser2netweb/issues/121), [#109](https://github.com/haliskilic/ser2netweb/issues/109), PRs [#133](https://github.com/haliskilic/ser2netweb/pull/133), [#135](https://github.com/haliskilic/ser2netweb/pull/135))
 - The fleet view's peer mapping editor answers a peer's malformed mapping with a message
   instead of HTTP 500.
 - `ser2netweb.web` fully type-annotated and checked by mypy in CI.
