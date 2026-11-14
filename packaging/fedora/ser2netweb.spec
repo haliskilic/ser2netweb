@@ -9,7 +9,7 @@
 %global xterm_fit_version 0.11.0
 
 Name:           ser2netweb
-Version:        3.1.0
+Version:        3.1.1
 Release:        1%{?dist}
 Summary:        Serial-to-network bridge with a web UI
 
@@ -172,6 +172,9 @@ done
 %attr(0700,ser2netweb,ser2netweb) %dir %{_sharedstatedir}/ser2netweb
 
 %changelog
+* Sat Nov 14 2026 Halis KILIÇ <mail@haliskilic.com.tr> - 3.1.1-1
+- Update to 3.1.1
+
 * Sat Nov 14 2026 Halis KILIÇ <mail@haliskilic.com.tr> - 3.1.0-1
 - Update to 3.1.0
 

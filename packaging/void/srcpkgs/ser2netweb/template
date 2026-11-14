@@ -1,6 +1,6 @@
 # Template file for 'ser2netweb'
 pkgname=ser2netweb
-version=3.1.0
+version=3.1.1
 revision=1
 build_style=python3-pep517
 hostmakedepends="python3-setuptools"
@@ -16,7 +16,7 @@ license="AGPL-3.0-only, BSD-3-Clause, 0BSD, MIT"
 homepage="https://github.com/haliskilic/ser2netweb"
 changelog="https://raw.githubusercontent.com/haliskilic/ser2netweb/main/CHANGELOG.md"
 distfiles="https://github.com/haliskilic/ser2netweb/archive/refs/tags/v${version}.tar.gz"
-checksum=1638340224391ec52566e254ecdb34d09ef89b32fe0983add6b5d6c1f7165a7e
+checksum=22a4261d57b73fdd32c867e27473ea37d4b42485934f30351fff3e3818196f90
 make_dirs="/var/lib/ser2netweb 0700 _ser2netweb _ser2netweb"
 system_accounts="_ser2netweb"
 _ser2netweb_homedir="/var/lib/ser2netweb"
