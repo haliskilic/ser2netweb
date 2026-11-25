@@ -25,7 +25,7 @@ typing_extensions==4.16.0
 # exceptiongroup there; ser2net additionally uses exceptiongroup + taskgroup as
 # backports of asyncio.TaskGroup / asyncio.Runner / except* so ser2netweb/engine/bridge.py
 # and ser2netweb/runtime.py run on 3.10. On 3.11+ these are native and not installed.
-exceptiongroup==1.3.1 ; python_version < "3.11"
+exceptiongroup==1.3.2 ; python_version < "3.11"
 taskgroup==0.2.2 ; python_version < "3.11"
 # click pulls in colorama on Windows (for ANSI colors) on every Python version.
 colorama==0.4.6 ; platform_system == "Windows"
